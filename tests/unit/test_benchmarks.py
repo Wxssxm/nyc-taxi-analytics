@@ -7,8 +7,8 @@ from pathlib import Path
 import pytest
 
 from nyc_taxi.benchmarks.compare import (
-    BenchmarkResult,
     WORKLOADS,
+    BenchmarkResult,
     render_chart,
     render_markdown,
     run_benchmarks,

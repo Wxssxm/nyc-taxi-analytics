@@ -9,7 +9,9 @@ import pytest
 from nyc_taxi.analytics.database import connect, find_parquet_files, register_views
 
 
-def test_find_parquet_files_returns_sample_when_data_empty(tmp_path: Path, sample_dir: Path) -> None:
+def test_find_parquet_files_returns_sample_when_data_empty(
+    tmp_path: Path, sample_dir: Path
+) -> None:
     files = find_parquet_files(tmp_path, sample_dir, "yellow")
     assert len(files) >= 1
     assert all(f.name.startswith("yellow_tripdata_") for f in files)
@@ -31,9 +33,8 @@ def test_register_views_creates_expected_views(sample_dir: Path, tmp_path: Path)
 def test_register_views_raises_when_no_files(tmp_path: Path) -> None:
     other_empty = tmp_path / "other"
     other_empty.mkdir()
-    with connect(None) as con:
-        with pytest.raises(FileNotFoundError, match="No parquet files"):
-            register_views(con, tmp_path, other_empty, "yellow")
+    with connect(None) as con, pytest.raises(FileNotFoundError, match="No parquet files"):
+        register_views(con, tmp_path, other_empty, "yellow")
 
 
 def test_connect_persists_to_disk(tmp_path: Path) -> None:

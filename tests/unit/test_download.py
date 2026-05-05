@@ -16,7 +16,9 @@ from nyc_taxi.ingestion.download import (
     iter_months,
 )
 
-FAKE_PARQUET_BYTES = b"PAR1" + b"\0" * 1024 + b"PAR1"  # not real parquet, fine for testing the IO layer
+FAKE_PARQUET_BYTES = (
+    b"PAR1" + b"\0" * 1024 + b"PAR1"
+)  # not real parquet, fine for testing the IO layer
 
 
 def test_iter_months_simple() -> None:
@@ -53,7 +55,9 @@ def test_build_url_invalid_month() -> None:
 @respx.mock
 def test_download_one_writes_file(tmp_path: Path) -> None:
     url = build_url("yellow", "2024-01")
-    respx.head(url).mock(return_value=httpx.Response(200, headers={"content-length": str(len(FAKE_PARQUET_BYTES))}))
+    respx.head(url).mock(
+        return_value=httpx.Response(200, headers={"content-length": str(len(FAKE_PARQUET_BYTES))})
+    )
     respx.get(url).mock(return_value=httpx.Response(200, content=FAKE_PARQUET_BYTES))
 
     result = download_one("yellow", "2024-01", tmp_path, timeout=30)
@@ -70,7 +74,9 @@ def test_download_one_skips_when_size_matches(tmp_path: Path) -> None:
     dest = tmp_path / "yellow_tripdata_2024-01.parquet"
     dest.write_bytes(FAKE_PARQUET_BYTES)
 
-    respx.head(url).mock(return_value=httpx.Response(200, headers={"content-length": str(len(FAKE_PARQUET_BYTES))}))
+    respx.head(url).mock(
+        return_value=httpx.Response(200, headers={"content-length": str(len(FAKE_PARQUET_BYTES))})
+    )
 
     result = download_one("yellow", "2024-01", tmp_path, timeout=30)
 
@@ -84,7 +90,9 @@ def test_download_one_redownloads_on_size_mismatch(tmp_path: Path) -> None:
     dest = tmp_path / "yellow_tripdata_2024-01.parquet"
     dest.write_bytes(b"stale")  # smaller than remote
 
-    respx.head(url).mock(return_value=httpx.Response(200, headers={"content-length": str(len(FAKE_PARQUET_BYTES))}))
+    respx.head(url).mock(
+        return_value=httpx.Response(200, headers={"content-length": str(len(FAKE_PARQUET_BYTES))})
+    )
     respx.get(url).mock(return_value=httpx.Response(200, content=FAKE_PARQUET_BYTES))
 
     result = download_one("yellow", "2024-01", tmp_path, timeout=30)
@@ -96,7 +104,9 @@ def test_download_one_redownloads_on_size_mismatch(tmp_path: Path) -> None:
 @respx.mock
 def test_download_one_retries_on_500(tmp_path: Path) -> None:
     url = build_url("yellow", "2024-01")
-    respx.head(url).mock(return_value=httpx.Response(200, headers={"content-length": str(len(FAKE_PARQUET_BYTES))}))
+    respx.head(url).mock(
+        return_value=httpx.Response(200, headers={"content-length": str(len(FAKE_PARQUET_BYTES))})
+    )
     route = respx.get(url).mock(
         side_effect=[
             httpx.Response(500),
@@ -116,7 +126,9 @@ def test_download_range_handles_failure_per_file(tmp_path: Path) -> None:
     url_jan = build_url("yellow", "2024-01")
     url_feb = build_url("yellow", "2024-02")
 
-    respx.head(url_jan).mock(return_value=httpx.Response(200, headers={"content-length": str(len(FAKE_PARQUET_BYTES))}))
+    respx.head(url_jan).mock(
+        return_value=httpx.Response(200, headers={"content-length": str(len(FAKE_PARQUET_BYTES))})
+    )
     respx.get(url_jan).mock(return_value=httpx.Response(200, content=FAKE_PARQUET_BYTES))
 
     respx.head(url_feb).mock(return_value=httpx.Response(404))
