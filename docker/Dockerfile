@@ -30,8 +30,9 @@ COPY --from=builder /opt/venv /opt/venv
 COPY --chown=app:app src/ ./src/
 COPY --chown=app:app pyproject.toml README.md ./
 
+RUN mkdir -p /app/data/raw /app/data/sample && chown -R app:app /app
+
 USER app
-RUN mkdir -p /app/data/raw /app/data/sample
 
 ENTRYPOINT ["nyc-taxi"]
 CMD ["--help"]
