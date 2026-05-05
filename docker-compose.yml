@@ -1,0 +1,13 @@
+services:
+  nyc-taxi:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: nyc-taxi-analytics:latest
+    container_name: nyc-taxi
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+      - ./docs/images:/app/docs/images
+    command: ["query", "all"]

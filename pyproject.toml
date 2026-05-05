@@ -1,0 +1,91 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "nyc-taxi-analytics"
+version = "0.1.0"
+description = "High-performance SQL analytics on NYC TLC Taxi parquet files using DuckDB — no warehouse needed."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Wassim Fayala", email = "wassimfayala2@gmail.com" }]
+requires-python = ">=3.11"
+keywords = ["data-engineering", "duckdb", "parquet", "nyc-taxi", "analytics"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+]
+dependencies = [
+    "duckdb>=1.1.0",
+    "polars>=1.10.0",
+    "pandas>=2.2.0",
+    "pyarrow>=18.0.0",
+    "httpx>=0.28.0",
+    "tenacity>=9.0.0",
+    "typer>=0.15.0",
+    "loguru>=0.7.0",
+    "pydantic>=2.9.0",
+    "pydantic-settings>=2.6.0",
+    "matplotlib>=3.9.0",
+    "rich>=13.9.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-cov>=6.0.0",
+    "pytest-mock>=3.14.0",
+    "respx>=0.21.0",
+    "ruff>=0.8.0",
+    "black>=24.10.0",
+    "pre-commit>=4.0.0",
+    "detect-secrets>=1.5.0",
+]
+
+[project.scripts]
+nyc-taxi = "nyc_taxi.cli:app"
+
+[project.urls]
+Homepage = "https://github.com/wxssxm/nyc-taxi-analytics"
+Repository = "https://github.com/wxssxm/nyc-taxi-analytics"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/nyc_taxi"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["B011"]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --strict-config"
+markers = [
+    "integration: marks tests as integration (deselect with '-m \"not integration\"')",
+]
+
+[tool.coverage.run]
+source = ["src/nyc_taxi"]
+branch = true
+omit = ["*/cli.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+]
+show_missing = true
