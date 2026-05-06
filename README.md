@@ -186,5 +186,3 @@ MIT — see [LICENSE](LICENSE).
 **Wassim Fayala** — Data Engineer apprenti @ La Forge (Paris)
 
 [LinkedIn](https://www.linkedin.com/in/wassim-fayala/) · wassimfayala2@gmail.com
-
-Part of a 10-project [data engineering portfolio](https://github.com/wxssxm).
